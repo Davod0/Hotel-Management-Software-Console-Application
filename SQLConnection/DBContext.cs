@@ -11,8 +11,8 @@ public class DBContext : ISQLRepository
     private static IDbConnection connection = new SqlConnection("Server=localhost,1433;User=sa;Password=apA123!#!;Database=HotellManagementSoftware;");
     public static string sql;
 
-    // En metod som kontrollerar om connection med databasen är öppet annars öppnar denna metoden kontakten med databasen geonm funktionen open().
 
+    // En metod som kontrollerar om connection med databasen är öppet annars öppnar denna metod kontakten med databasen geonm funktionen open().
     public void OpenDBConnection()
     {
         if (connection.State != ConnectionState.Open)
@@ -44,10 +44,13 @@ public class DBContext : ISQLRepository
     }
 
 
-    public void AddCustomer(string name, string email, string phoneNumber)
+    public int AddCustomer(ISearchable x)
     {
+        Customer _customer = (Customer)x;
         OpenDBConnection();
-        connection.Execute($"INSERT INTO Customer(name, email, phoneNumber) VALUES ('{name}', '{email}', '{phoneNumber}')");
+        sql = "INSERT INTO Customer(name, email, phoneNumber) VALUES (@Name, @Email, @PhoneNumber);SELECT SCOPE_IDENTITY();";
+        int customerId = connection.QuerySingle<int>(sql, _customer);
+        return customerId;
     }
 
     public void AddReservation(DateTime checkIn, DateTime checkOut, int totalCost, int customerId, int roomId)
@@ -63,6 +66,52 @@ public class DBContext : ISQLRepository
     }
 
 
+    //_________________________________________________________________________________________________
+
+
+
+    public IEnumerable<ISearchable> GetData()
+    {
+        List<ISearchable> searchables = new List<ISearchable>();
+
+        OpenDBConnection();
+        sql = "SELECT id, roomNumber, type, price FROM Room;";
+        IEnumerable<Room> rooms = connection.Query<Room>(sql);
+        searchables.AddRange(rooms);
+
+        sql = "SELECT id, name, email, phoneNumber FROM Customer;";
+        IEnumerable<Customer> customers = connection.Query<Customer>(sql);
+        searchables.AddRange(customers);
+
+        sql = "SELECT id, checkIn, checkOut, totalCost, customerId, roomId FROM Reservation;";
+        IEnumerable<Reservation> reservations = connection.Query<Reservation>(sql);
+        searchables.AddRange(reservations);
+
+        return searchables;
+    }
+
+
+    public int AddData(ISearchable x)
+    {
+        if (x is Customer _customer)
+        {
+            // Customer _customer = (Customer)x;
+            OpenDBConnection();
+            sql = "INSERT INTO Customer(name, email, phoneNumber) VALUES (@Name, @Email, @PhoneNumber);SELECT SCOPE_IDENTITY();";
+            int customerId = connection.QuerySingle<int>(sql, _customer);
+            return customerId;
+        }
+        if (x is Room _room)
+        {
+
+
+        }
+        if (x is Reservation _reservation)
+        {
+
+        }
+        return 0;
+    }
 
 
 }

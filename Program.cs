@@ -6,35 +6,40 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        // foreach (Room x in DBContext.GetRooms())
-        // {
-        //     Console.WriteLine($"Rum id: {x.Id} , Rum pris: {x.Price} , Rum typ {x.Type}");
-        // }
-
-        // foreach (Customer c in DBContext.GetCustomers())
-        // {
-        //     Console.WriteLine($"Namn: {c.Name} , telefon: {c.PhoneNumber} , email: {c.Email}");
-        // }
-
-
-        // DBContext.AddReservation(new DateTime(2023, 10, 1), new DateTime(2023, 11, 10), 3000, 1, 2);
-
-
-        // foreach (Reservation r in DBContext.GetReservations())
-        // {
-        //     Console.WriteLine($"kund id : {r.Id} , pris: {r.TotalCost} , start tid: {r.CheckOut}");
-        // }
-
         DBContext newDB = new DBContext();
 
         HotelCatalogue k = new HotelCatalogue(newDB);
-        k.
 
 
 
 
+        foreach (ISearchable x in k.GetAllData())
+        {
+            if (x is Room r)
+            {
+                Console.WriteLine($"rum id: {r.Id}, Rum nummmer: {r.Price}, rum typ {r.Type}");
+            }
+            if (x is Customer c)
+            {
+                Console.WriteLine($"kund id: {c.Id}, kund namn: {c.Name}, kund telefon: {c.PhoneNumber} ");
+            }
+            if (x is Reservation res)
+            {
+                Console.WriteLine($"Reservation id: {res.Id}, total kostand för reservation: {res.TotalCost}, check out datum: {res.CheckOut} ");
+            }
+        }
 
 
+
+        // Customer k = new();
+        // k.Name = "Alex Fergosson";
+        // k.Email = "alexfergosson@gmail.com";
+        // k.PhoneNumber = "07655332211";
+
+        // int s = newDB.AddCustomer(k);
+
+        // Console.WriteLine("___________________\n");
+        // Console.WriteLine(s);
 
 
     }

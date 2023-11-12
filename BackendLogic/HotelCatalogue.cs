@@ -1,46 +1,72 @@
 namespace HotelManagementSoftware;
 
-public class HotelCatalogue // Catalogue
-{
-    // Detta hotelCatalogue klass säger varje klass som hämtar data från en hotell databas ska implementera interfacet ISQLConnection för att kopplas till Catalogue klassen (logiken) och kunna köras i detta program.
 
-    ISQLRepository iSQLRepository;
-    public HotelCatalogue(ISQLRepository _iSQLRepository)
+// Denna klasss är logiken i vår program och denna klass har connection med klassen som hanterar detabasen och med klassen...
+//... som hanterar UI
+public class HotelCatalogue
+{
+    // Dennaa hotelCatalogue klass säger varje klass som hämtar data från en hotell databas ska implementera interfacet ISQLConnection för att kopplas till Catalogue klassen (logiken) för att sedan kunna köras i detta program.
+
+    ISQLRepository sqlRepository;
+    public HotelCatalogue(ISQLRepository _sqlRepository)
     {
-        iSQLRepository = _iSQLRepository;
+        sqlRepository = _sqlRepository;
     }
 
-    // Här ska alla metoder som hanterar deta från databasen ligga och även olika listor av olika typer av data som hämtas från databasen.
+
+    List<ISearchable> DataBaseRepository = new List<ISearchable>();
+    public List<ISearchable> GetAllData()
+    {
+        DataBaseRepository = sqlRepository.GetData().ToList();
+        return DataBaseRepository;
+    }
 
 
+    // public bool AddDataToHotel(ISearchable x)
+    // {
 
-
+    // }
 
 }
 
 
 
 
+
+
+
+
+//Detta interface möjlig gör att vi kan byta databas och koppla en annan hotel databs till vårt program genom att bara..
+//..implementera detta interface i klassen som hanterar databasen.
 
 // ISQLRepository interfacet är för att varje klass som hämtar data från en hotell databas och vill köras i detta program ska implementeras ISQLConnectionoch interfacet och dess metoder, 
 // Metoder i detta interface säger att varje klass som matchar tabeller i en hotell databas ska implementera interfacet ISearchable.
 public interface ISQLRepository // Detta interface är kopplingen mellan logiken och klassen som hanterar databasen.
 {
-    // En metod som ska kontrollerar om connection med databasen är öppet.
+    // En metod som ska kontrollera om connection med databasen är öppet.
     void OpenDBConnection();
 
     IEnumerable<ISearchable> GetRooms();
     IEnumerable<ISearchable> GetCustomers();
     IEnumerable<ISearchable> GetReservations();
-    void AddCustomer(string name, string email, string phoneNumber);
+    int AddCustomer(ISearchable x);
     void AddReservation(DateTime checkIn, DateTime checkOut, int totalCost, int customerId, int roomId);
     void UpdateRoomInfo(int roomNumber, string type, int price);
+
+
+    IEnumerable<ISearchable> GetData();
+
+    // int AddData(ISearchable x);
 }
 
 
 
 
-public interface ISearchable // Detta intreface ska implementeras av alla klasser som matchar tabeller från databasen
+
+
+
+
+public interface ISearchable // Detta intreface ska implementeras av alla klasser som matchar tabeller från databasen.
 {
     bool MyContains(int value);
 }
@@ -54,7 +80,14 @@ abstract class HotelItem : ISearchable
 
 
 
-public class Room : ISearchable
+
+
+
+
+
+
+
+public class Room : ISearchable //Fixa ToString metoden och då gör Id till private
 {
     public int Id { get; set; }
     public int RoomNumber { get; set; }
@@ -91,9 +124,6 @@ public class Room : ISearchable
         return false;
     }
 }
-
-
-
 
 
 public class Reservation : ISearchable
@@ -139,8 +169,6 @@ public class Reservation : ISearchable
     }
 
 }
-
-
 
 
 public class Customer : ISearchable
