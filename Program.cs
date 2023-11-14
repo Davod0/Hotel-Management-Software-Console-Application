@@ -6,40 +6,59 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        DBContext newDB = new DBContext();
 
+        DBContext newDB = new DBContext();
         HotelCatalogue k = new HotelCatalogue(newDB);
 
 
+        // foreach (ISearchable x in k.GeAllDataFromHotel())
+        // {
+        //     if (x is Room r)
+        //     {
+        //         Console.WriteLine(r);
+        //     }
+        //     if (x is Customer c)
+        //     {
+        //         Console.WriteLine(c);
+        //     }
+        //     if (x is Reservation reservation)
+        //     {
+        //         Console.WriteLine(reservation);
+        //     }
+        // }
 
 
-        foreach (ISearchable x in k.GetAllData())
+
+        foreach (ISearchable x in k.Search(103))
         {
-            if (x is Room r)
-            {
-                Console.WriteLine($"rum id: {r.Id}, Rum nummmer: {r.Price}, rum typ {r.Type}");
-            }
-            if (x is Customer c)
-            {
-                Console.WriteLine($"kund id: {c.Id}, kund namn: {c.Name}, kund telefon: {c.PhoneNumber} ");
-            }
-            if (x is Reservation res)
-            {
-                Console.WriteLine($"Reservation id: {res.Id}, total kostand för reservation: {res.TotalCost}, check out datum: {res.CheckOut} ");
-            }
+            Console.WriteLine(x);
         }
 
 
 
-        // Customer k = new();
-        // k.Name = "Alex Fergosson";
-        // k.Email = "alexfergosson@gmail.com";
-        // k.PhoneNumber = "07655332211";
 
-        // int s = newDB.AddCustomer(k);
+
+
+        // Reservation res = new();
+        // res.CheckIn = new DateTime(2023, 11, 10);
+        // res.CheckOut = new DateTime(2023, 11, 30);
+        // res.CustomerId = 1;
+        // res.RoomId = 1;
+        // res.TotalCost = 6000;
+
+
+        // int bbbb = k.AddDataToHotel(res);
 
         // Console.WriteLine("___________________\n");
-        // Console.WriteLine(s);
+        // Console.WriteLine(bbbb);
+
+
+        // int resId = newDB.AddData(res);
+
+        // Console.WriteLine("___________________\n");
+        // Console.WriteLine(resId);
+
+
 
 
     }

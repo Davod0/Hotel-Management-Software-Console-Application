@@ -1,31 +1,51 @@
+
 namespace HotelManagementSoftware;
 
 
-// Denna klasss är logiken i vår program och denna klass har connection med klassen som hanterar detabasen och med klassen...
-//... som hanterar UI
+
 public class HotelCatalogue
 {
-    // Dennaa hotelCatalogue klass säger varje klass som hämtar data från en hotell databas ska implementera interfacet ISQLConnection för att kopplas till Catalogue klassen (logiken) för att sedan kunna köras i detta program.
-
     ISQLRepository sqlRepository;
     public HotelCatalogue(ISQLRepository _sqlRepository)
     {
         sqlRepository = _sqlRepository;
     }
 
-
-    List<ISearchable> DataBaseRepository = new List<ISearchable>();
-    public List<ISearchable> GetAllData()
+    public List<ISearchable> GeAllDataFromHotel()
     {
-        DataBaseRepository = sqlRepository.GetData().ToList();
-        return DataBaseRepository;
+        return sqlRepository.GetData().ToList();
+    }
+
+    public int AddDataToHotel(ISearchable x)
+    {
+        // int id = sqlRepository.AddData(x);
+        // return id;
+        return sqlRepository.AddData(x);
     }
 
 
-    // public bool AddDataToHotel(ISearchable x)
-    // {
+    public List<ISearchable> Search(string stringValue)
+    {
+        List<ISearchable> foundData = new();
+        foreach (ISearchable item in sqlRepository.GetData())
+        {
+            if (item.MyContains(stringValue)) foundData.Add(item);
+        }
+        return foundData;
+    }
 
-    // }
+    public List<ISearchable> Search(int intValue)
+    {
+        List<ISearchable> foundData = new();
+        foreach (ISearchable item in sqlRepository.GetData())
+        {
+            if (item.MyContains(intValue)) foundData.Add(item);
+        }
+        return foundData;
+    }
+
+
+
 
 }
 
@@ -34,29 +54,14 @@ public class HotelCatalogue
 
 
 
-
-
-//Detta interface möjlig gör att vi kan byta databas och koppla en annan hotel databs till vårt program genom att bara..
-//..implementera detta interface i klassen som hanterar databasen.
-
-// ISQLRepository interfacet är för att varje klass som hämtar data från en hotell databas och vill köras i detta program ska implementeras ISQLConnectionoch interfacet och dess metoder, 
-// Metoder i detta interface säger att varje klass som matchar tabeller i en hotell databas ska implementera interfacet ISearchable.
-public interface ISQLRepository // Detta interface är kopplingen mellan logiken och klassen som hanterar databasen.
+public interface ISQLRepository
 {
-    // En metod som ska kontrollera om connection med databasen är öppet.
     void OpenDBConnection();
-
-    IEnumerable<ISearchable> GetRooms();
-    IEnumerable<ISearchable> GetCustomers();
-    IEnumerable<ISearchable> GetReservations();
-    int AddCustomer(ISearchable x);
-    void AddReservation(DateTime checkIn, DateTime checkOut, int totalCost, int customerId, int roomId);
-    void UpdateRoomInfo(int roomNumber, string type, int price);
-
-
     IEnumerable<ISearchable> GetData();
+    int AddData(ISearchable x);
 
-    // int AddData(ISearchable x);
+    // int UpdateData(ISearchable x);
+    // int DeleteData(ISearchable x);
 }
 
 
@@ -66,14 +71,16 @@ public interface ISQLRepository // Detta interface är kopplingen mellan logiken
 
 
 
-public interface ISearchable // Detta intreface ska implementeras av alla klasser som matchar tabeller från databasen.
+public interface ISearchable
 {
     bool MyContains(int value);
+    bool MyContains(string value);
 }
 
-abstract class HotelItem : ISearchable
+public abstract class HotelItem : ISearchable
 {
     public abstract bool MyContains(int value);
+    public abstract bool MyContains(string value);
 
     public abstract override string ToString();
 }
@@ -87,9 +94,9 @@ abstract class HotelItem : ISearchable
 
 
 
-public class Room : ISearchable //Fixa ToString metoden och då gör Id till private
+public class Room : HotelItem
 {
-    public int Id { get; set; }
+    public int Id { get; }
     public int RoomNumber { get; set; }
     public string Type { get; set; }
     public int Price { get; set; }
@@ -105,8 +112,7 @@ public class Room : ISearchable //Fixa ToString metoden och då gör Id till pri
     // }
 
 
-    // Metod från ISearchable interfacet
-    public bool MyContains(int roomNumber)
+    public override bool MyContains(int roomNumber)
     {
         if (RoomNumber.Equals(roomNumber))
         {
@@ -115,7 +121,7 @@ public class Room : ISearchable //Fixa ToString metoden och då gör Id till pri
         return false;
     }
 
-    public bool MyContains(string typeOfRoom)
+    public override bool MyContains(string typeOfRoom)
     {
         if (Type.Contains(typeOfRoom, StringComparison.InvariantCultureIgnoreCase))
         {
@@ -123,12 +129,18 @@ public class Room : ISearchable //Fixa ToString metoden och då gör Id till pri
         }
         return false;
     }
+
+
+    public override string ToString()
+    {
+        return $"Rum id: {Id}, rum nummer: {RoomNumber}, rum typ: {Type}, rum pris: {Price}.";
+    }
 }
 
 
-public class Reservation : ISearchable
+public class Reservation : HotelItem
 {
-    public int Id { get; set; }
+    public int Id { get; }
     public DateTime CheckIn { get; set; }
     public DateTime CheckOut { get; set; }
     public int TotalCost { get; set; }
@@ -149,7 +161,7 @@ public class Reservation : ISearchable
 
 
     // Metod från ISearchable interfacet
-    public bool MyContains(int customerId)
+    public override bool MyContains(int customerId)
     {
         if (CustomerId.Equals(customerId))
         {
@@ -159,21 +171,31 @@ public class Reservation : ISearchable
     }
 
     // En överlagring av metoden MyContains som tar emot reservationId i string form för att ge möjligheten att kunna hitta på reservationer genom id
-    public bool MyContains(string reservationId)
+    public override bool MyContains(string reservationId)
     {
-        if (Id.Equals(int.Parse(reservationId)))
+        if (!int.TryParse(reservationId, out int result))
+        {
+            return false;
+        }
+
+        if (Id.Equals(result))
         {
             return true;
         }
         return false;
     }
 
+    public override string ToString()
+    {
+        return $"Bokning id: {Id}, inchecknings datum: {CheckIn}, utchecknings datum: {CheckOut}, total kostnad {TotalCost}, kund id: {CustomerId}, rum id: {RoomId}.";
+    }
+
 }
 
 
-public class Customer : ISearchable
+public class Customer : HotelItem
 {
-    public int Id { get; set; }
+    public int Id { get; }
     public string Name { get; set; }
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
@@ -189,7 +211,7 @@ public class Customer : ISearchable
 
 
     // Metod från ISearchable interfacet
-    public bool MyContains(int customerId)
+    public override bool MyContains(int customerId)
     {
         if (Id.Equals(customerId))
         {
@@ -198,14 +220,19 @@ public class Customer : ISearchable
         return false;
     }
 
-    // En överlagring av metoden MyContains som ger möjlighet att kunna hitta kunder även gerom deras namn
-    public bool MyContains(string customerName)
+    // En överlagring av metoden MyContains som ger möjlighet att kunna hitta kunder även genom deras namn
+    public override bool MyContains(string customerName)
     {
         if (Name.Contains(customerName, StringComparison.InvariantCultureIgnoreCase))
         {
             return true;
         }
         return false;
+    }
+
+    public override string ToString()
+    {
+        return $"kund id: {Id}, kund namn: {Name}, kund email: {Email}, kund nummer: {PhoneNumber}.";
     }
 
 }
