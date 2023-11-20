@@ -36,3 +36,27 @@ ________________________________________________________________________________
 public interface ISearchable
 
 Detta intreface ska implementeras av alla klasser som matchar tabeller från databasen.
+
+
+
+
+______________________________________________________________________________________________________________________________
+ public IEnumerable<HotelItem> GetAvailableRoom(DateTime checkIn)
+
+ först hämtar vi alla roomId från tabelen Reservation som är större än inchecknings datumet i listan (reservedRoomId), så alla upptagena rum
+ sedan hämtar vi alla roomId från tabelen Room i listan (allRoomId), alla rum
+ sedan gör vi en int lista där lagras alla roomId förutom de rum som är upptagna i listan (availableRoomId)
+ sedan hämtas alla rum från tabelen Room i listan (availableRooms) genom att använda id som lagrades i listan (availableRoomId)
+
+ vi gör en if-sats där vi kollar om listan (availableRooms) är tom eller inte om inte returnerar vi denna listan 
+ och vi gör det för att om det inte finns någon bokning då krashar programmet när vi vill retunera listan (availableRooms)
+
+
+ om det inte finns någon bokning då retunerar vi alla rum 
+
+ 
+______________________________________________________________________________________________________________________________
+ viktig 
+.Om man söker efter en reservation genom MyContains metoden, antingen kan man ge customerId i int form eller reservationId i string form
+.I metoden UpdateData om man vill uppdatera en kund info så som telefon nummer då kan man göra det genom att ange kundens id, kunden måste redan finnas 
+   i ststemet annars det går inte att använda UpdateData metoden.

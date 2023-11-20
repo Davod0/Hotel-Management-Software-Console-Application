@@ -2,8 +2,7 @@
 namespace HotelManagementSoftware;
 
 
-
-public class HotelCatalogue
+public class HotelCatalogue : IUserInterface
 {
     ISQLRepository sqlRepository;
     public HotelCatalogue(ISQLRepository _sqlRepository)
@@ -11,37 +10,87 @@ public class HotelCatalogue
         sqlRepository = _sqlRepository;
     }
 
-    public List<ISearchable> GeAllDataFromHotel()
+    public List<HotelItem> GetAllDataFromHotel()
     {
         return sqlRepository.GetData().ToList();
     }
 
-    public int AddDataToHotel(ISearchable x)
+    public int AddDataToHotel(HotelItem x)
     {
-        // int id = sqlRepository.AddData(x);
-        // return id;
-        return sqlRepository.AddData(x);
+        int id = sqlRepository.AddData(x);
+        return id;
     }
 
-
-    public List<ISearchable> Search(string stringValue)
+    public int UpdateHotelData(HotelItem x)
     {
-        List<ISearchable> foundData = new();
-        foreach (ISearchable item in sqlRepository.GetData())
+        return sqlRepository.UpdateData(x);
+    }
+
+    public int DeleteDataFromHotel(HotelItem x)
+    {
+        return sqlRepository.DeleteData(x);
+    }
+
+    public List<HotelItem> GetAvailableRoomFRomHotel(DateTime checkIn)
+    {
+        return sqlRepository.GetAvailableRoom(checkIn).ToList();
+    }
+
+    public List<HotelItem> SearchHotelItem(string stringValue)
+    {
+        List<HotelItem> foundData = new();
+        foreach (HotelItem item in sqlRepository.GetData())
         {
             if (item.MyContains(stringValue)) foundData.Add(item);
         }
         return foundData;
     }
 
-    public List<ISearchable> Search(int intValue)
+    public List<HotelItem> SearchHotelItem(int intValue)
     {
-        List<ISearchable> foundData = new();
-        foreach (ISearchable item in sqlRepository.GetData())
+        List<HotelItem> foundData = new();
+        foreach (HotelItem item in sqlRepository.GetData())
         {
             if (item.MyContains(intValue)) foundData.Add(item);
         }
         return foundData;
+    }
+
+
+
+
+
+
+
+
+    // Metoder från IUserInterface implementeras här
+    public List<HotelItem> Get()
+    {
+        return GetAllDataFromHotel();
+    }
+    public int Add(HotelItem x)
+    {
+        return AddDataToHotel(x);
+    }
+    public int Update(HotelItem x)
+    {
+        return UpdateHotelData(x);
+    }
+    public int Delete(HotelItem x)
+    {
+        return DeleteDataFromHotel(x);
+    }
+    public List<HotelItem> GetAvailable(DateTime checkIn)
+    {
+        return GetAvailableRoomFRomHotel(checkIn);
+    }
+    public List<HotelItem> Search(string stringValue)
+    {
+        return SearchHotelItem(stringValue);
+    }
+    public List<HotelItem> Search(int intValue)
+    {
+        return SearchHotelItem(intValue);
     }
 
 
@@ -54,14 +103,24 @@ public class HotelCatalogue
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 public interface ISQLRepository
 {
-    void OpenDBConnection();
-    IEnumerable<ISearchable> GetData();
-    int AddData(ISearchable x);
-
-    // int UpdateData(ISearchable x);
-    // int DeleteData(ISearchable x);
+    IEnumerable<HotelItem> GetData();
+    int AddData(HotelItem x);
+    int UpdateData(HotelItem x);
+    int DeleteData(HotelItem x);
+    public IEnumerable<HotelItem> GetAvailableRoom(DateTime checkIn);
 }
 
 
@@ -96,19 +155,23 @@ public abstract class HotelItem : ISearchable
 
 public class Room : HotelItem
 {
-    public int Id { get; }
+    public int Id { get; set; }
     public int RoomNumber { get; set; }
     public string Type { get; set; }
     public int Price { get; set; }
 
 
-    //DENNA Konstruktor SKA FIXAS EFTERSOM NÄR VI HÄMTAR DATTA FRÅN DATABASEN DÅ FUNKAR DET INTR OM Konstruktor FINNS I KLASSEN!
-    //Konstruktor 
+    // DENNA Konstruktor SKA FIXAS EFTERSOM NÄR VI HÄMTAR DATTA FRÅN DATABASEN DÅ FUNKAR DET INTR OM Konstruktor FINNS I KLASSEN!
+    // Konstruktor 
     // public Room(int _roomNumber, string _type, int _price)
     // {
     //     RoomNumber = _roomNumber;
     //     Type = _type;
     //     Price = _price;
+    // }
+    // public Room(int _id, int _roomNumber, string _type, int _price) : this(_roomNumber, _type, _price)
+    // {
+    //     Id = _id;
     // }
 
 
@@ -140,7 +203,7 @@ public class Room : HotelItem
 
 public class Reservation : HotelItem
 {
-    public int Id { get; }
+    public int Id { get; set; }
     public DateTime CheckIn { get; set; }
     public DateTime CheckOut { get; set; }
     public int TotalCost { get; set; }
@@ -195,7 +258,7 @@ public class Reservation : HotelItem
 
 public class Customer : HotelItem
 {
-    public int Id { get; }
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
@@ -220,7 +283,7 @@ public class Customer : HotelItem
         return false;
     }
 
-    // En överlagring av metoden MyContains som ger möjlighet att kunna hitta kunder även genom deras namn
+    // En  överlagring  av metoden MyContains som ger möjlighet att kunna hitta kunder även genom deras namn
     public override bool MyContains(string customerName)
     {
         if (Name.Contains(customerName, StringComparison.InvariantCultureIgnoreCase))
@@ -232,7 +295,7 @@ public class Customer : HotelItem
 
     public override string ToString()
     {
-        return $"kund id: {Id}, kund namn: {Name}, kund email: {Email}, kund nummer: {PhoneNumber}.";
+        return $"kund id: {Id}, kund namn: {Name}, kund email: {Email}, kund telefon nummer: {PhoneNumber}.";
     }
 
 }
