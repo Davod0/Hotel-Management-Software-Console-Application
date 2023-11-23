@@ -1,4 +1,15 @@
-Beskrivning om olika viktiga klasser/metoder/interfaces.
+_________________________________________________________________________________________
+Ett system för ett hotel, där lagras information om ett hotell i en databass,
+sedan data från databasen hanteras  på olika sätt i C# programmet så som hämta,
+uppdatera, radera, söka och soretarea informationen  på olika sätt.
+_________________________________________________________________________________________
+
+
+
+
+
+____________________________Beskrivning om olika viktiga klasser/metoder/interfaces_______________________________________
+
 
 ___________________________________________________________________________________________________________________________
 public class HotelCatalogue
@@ -39,7 +50,7 @@ Detta intreface ska implementeras av alla klasser som matchar tabeller från dat
 
 
 ______________________________________________________________________________________________________________________________
- public IEnumerable<HotelItem> GetAvailableRoom(DateTime checkIn)
+public IEnumerable<HotelItem> GetAvailableRoom(DateTime checkIn)
 
  först hämtar vi alla roomId från tabelen Reservation som är större än inchecknings datumet i listan (reservedRoomId), så alla upptagena rum
  sedan hämtar vi alla roomId från tabelen Room i listan (allRoomId), alla rum
