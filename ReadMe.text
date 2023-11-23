@@ -16,8 +16,6 @@ En metod som kontrollerar om connection med databasen är öppet annars...
 
 
 
-
-
 _____________________________________________________________________________________________________________________________
 public interface ISQLRepository
 
@@ -25,11 +23,11 @@ Detta interface möjlig gör att vi kan byta databas och koppla en annan hotel d
 ...implementera detta interface i klassen som hanterar databasen.
 
 ISQLRepository interfacet är för att varje klass som hämtar data från en hotell databas och vill köras i detta program...
-...ska implementeras ISQLConnectionoch interfacet och dess metoder.
+...ska implementeras ISQLRepository interfacet och dess metoder.
 
-Metoder i detta interface säger att varje klass som matchar tabeller i en hotell databas ska implementera interfacet ISearchable.
+Metoder i detta interface säger att varje klass som matchar tabeller i en hotell databas ska ärva fråna abstrakta klassen HotelItm.
 
-Detta interface är kopplingen mellan logiken och klassen som hanterar databasen.
+ISQLRepository Detta interface är kopplingen mellan logiken och klassen som hanterar databasen.
 
 
 ______________________________________________________________________________________________________________________________
