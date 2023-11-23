@@ -1,58 +1,52 @@
 
-namespace HotelManagementSoftware;
 
+namespace HotelManagementSoftware;
 public class UI
 {
+    ILogicRepository logicRepository;
 
-    IUserInterface iUserInterface;
-
-    public UI(IUserInterface _iUserInterface)
+    public UI(ILogicRepository _logicRepository)
     {
-        iUserInterface = _iUserInterface;
+        logicRepository = _logicRepository;
     }
 
     public List<HotelItem> GetAllDataFromLogic()
     {
-        return iUserInterface.Get();
+        return logicRepository.GetAllDataFromHotel();
     }
+
     public int AddDataToLogic(HotelItem x)
     {
-        return iUserInterface.Add(x);
+        return logicRepository.AddDataToHotel(x);
     }
+
     public int UpdateLogicData(HotelItem x)
     {
-        return iUserInterface.Update(x);
+        return logicRepository.UpdateHotelData(x);
     }
+
     public int DeleteDataFromLogic(HotelItem x)
     {
-        return iUserInterface.Delete(x);
+        return logicRepository.DeleteDataFromHotel(x);
     }
+
     public List<HotelItem> GetAvailableRoomFromLogic(DateTime x)
     {
-        return iUserInterface.GetAvailable(x);
+        return logicRepository.GetAvailableRoomFRomHotel(x);
+    }
+    public int AddReservationToLogic(Reservation reservation)
+    {
+        return logicRepository.AddReservation(reservation);
     }
 
     public List<HotelItem> SearchItem(string stringValue)
     {
-        return iUserInterface.Search(stringValue);
+        return logicRepository.SearchHotelItem(stringValue);
     }
+
     public List<HotelItem> SearchItem(int intValue)
     {
-        return iUserInterface.Search(intValue);
+        return logicRepository.SearchHotelItem(intValue);
     }
-
-}
-
-
-
-public interface IUserInterface
-{
-    List<HotelItem> Get();
-    int Add(HotelItem x);
-    int Update(HotelItem x);
-    int Delete(HotelItem x);
-    List<HotelItem> GetAvailable(DateTime checkIn);
-    List<HotelItem> Search(int intValue);
-    List<HotelItem> Search(string stringValue);
 
 }

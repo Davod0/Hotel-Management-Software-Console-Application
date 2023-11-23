@@ -17,6 +17,7 @@ public class DBContext : ISQLRepository
             connection.Open();
     }
 
+
     public IEnumerable<HotelItem> GetData()
     {
         List<HotelItem> hotelItems = new List<HotelItem>();
@@ -199,45 +200,25 @@ public class DBContext : ISQLRepository
     }
 
 
+    public IEnumerable<HotelItem> GetReservationsOfOneRoom(int roomId)
+    {
+        OpenDBConnection();
+        var transaction = connection.BeginTransaction();
+        try
+        {
+            string sql = "SELECT * FROM Reservation WHERE roomId=@RoomID";
+            List<Reservation> reservationsOfOneRoom = connection.Query<Reservation>(sql, new { roomId = roomId }, transaction).ToList();
+            transaction.Commit();
+            connection.Close();
+            return reservationsOfOneRoom;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Transaction faild: {e.Message}");
+            transaction.Rollback();
+            throw;
+        }
 
-
-
-
-
+    }
 
 }
-
-
-
-// Fråga varför det funkade inte att använda transaktioner i denna metod ????????????????
-// public List<Room> GetAvailableRoom(DateTime checkIn)
-// {
-//     OpenDBConnection();
-//     IDbTransaction _transaction = connection.BeginTransaction();
-//     List<Room> availableRooms = new List<Room>();
-//     try
-//     {
-//         sql = "SELECT roomId FROM Reservation WHERE checkOut >= @checkIn";
-//         List<int> reservedRoomId = connection.Query<int>(sql, checkIn, _transaction).ToList();
-
-//         sql = $"SELECT id FROM Room;";
-//         List<int> allRoomId = connection.Query<int>(sql, _transaction).ToList();
-
-//         List<int> availableRoomId = allRoomId.Except(reservedRoomId).ToList();
-
-//         sql = "SELECT * FROM Room WHERE id IN @availableRoomId";
-//         availableRooms = connection.Query<Room>(sql, new { availableRoomId }, _transaction).ToList();
-
-//         _transaction.Commit();
-//     }
-//     catch (Exception e)
-//     {
-//         _transaction.Rollback();
-//         Console.WriteLine($"Transaktions fel: {e.Message}");
-//     }
-//     finally
-//     {
-//         connection.Close();
-//     }
-//     return availableRooms;
-// }
