@@ -1,7 +1,7 @@
 
 
 namespace HotelManagementSoftware;
-using MyLibrary;
+using UtilityLibrary;
 
 public class Menu
 {
@@ -208,9 +208,9 @@ public class Menu
     {
         Customer customer = new()
         {
-            Name = Library.GetString("Ange kundens namn: "),
-            Email = Library.GetString("Ange kundens Email adress: "),
-            PhoneNumber = Library.GetString("Ange kundens telefon nummer: ")
+            Name = UtilityLibrary.GetString("Ange kundens namn: "),
+            Email = UtilityLibrary.GetString("Ange kundens Email adress: "),
+            PhoneNumber = UtilityLibrary.GetString("Ange kundens telefon nummer: ")
         };
         int customerId = ui.AddDataToLogic(customer);
         if (customerId != 0)
@@ -226,10 +226,10 @@ public class Menu
     {
         Customer customer = new()
         {
-            Id = Library.GetInt("Ange ID-nummer för kunden som ska få uppdatering på sin information: "),
-            Name = Library.GetString("Ange kundens nya namn: "),
-            PhoneNumber = Library.GetString("Ange kundens nya telefonnummer: "),
-            Email = Library.GetString("Ange kundens nya Email adress: ")
+            Id = UtilityLibrary.GetInt("Ange ID-nummer för kunden som ska få uppdatering på sin information: "),
+            Name = UtilityLibrary.GetString("Ange kundens nya namn: "),
+            PhoneNumber = UtilityLibrary.GetString("Ange kundens nya telefonnummer: "),
+            Email = UtilityLibrary.GetString("Ange kundens nya Email adress: ")
         };
         int customerId = ui.UpdateLogicData(customer);
         if (customerId != 0)
@@ -243,10 +243,10 @@ public class Menu
     }
     public bool FindCustomer()
     {
-        int userChoice = Library.GetInt("Vill du söka efter en kund genom individens namn eller id-nummer? 1.Namn /2.Id-nummer:");
+        int userChoice = UtilityLibrary.GetInt("Vill du söka efter en kund genom individens namn eller id-nummer? 1.Namn /2.Id-nummer:");
         if (userChoice == 1)
         {
-            string customerName = Library.GetString("Ange namnet för kunden du söker: ");
+            string customerName = UtilityLibrary.GetString("Ange namnet för kunden du söker: ");
             foreach (HotelItem x in ui.SearchItem(customerName))
             {
                 if (x is Customer)
@@ -259,7 +259,7 @@ public class Menu
         else if (userChoice == 2)
         {
 
-            int customerId = Library.GetInt("Ange id-nummer för kunden du söker: ");
+            int customerId = UtilityLibrary.GetInt("Ange id-nummer för kunden du söker: ");
             foreach (HotelItem x in ui.SearchItem(customerId))
             {
                 if (x is Customer)
@@ -279,7 +279,7 @@ public class Menu
     {
         Customer customer = new()
         {
-            Id = Library.GetInt("Ange id-nummer för kunden som ska raderas: ")
+            Id = UtilityLibrary.GetInt("Ange id-nummer för kunden som ska raderas: ")
         };
         int customerId = ui.DeleteDataFromLogic(customer);
         if (customerId != 0)
@@ -309,11 +309,11 @@ public class Menu
     {
         Reservation reservation = new()
         {
-            CheckIn = Library.GetDateTime("Ange incheknings datumet: "),
-            CheckOut = Library.GetDateTime("Ange utchcknings datumet: "),
-            TotalCost = Library.GetInt("Ange total kostnad för bokningen: "),
-            CustomerId = Library.GetInt("Ange ID-nummer för kunden som äger bokningen:  "),
-            RoomId = Library.GetInt("Ange ID-nummer för det rum där bokningen gäller:  ")
+            CheckIn = UtilityLibrary.GetDateTime("Ange incheknings datumet: "),
+            CheckOut = UtilityLibrary.GetDateTime("Ange utchcknings datumet: "),
+            TotalCost = UtilityLibrary.GetInt("Ange total kostnad för bokningen: "),
+            CustomerId = UtilityLibrary.GetInt("Ange ID-nummer för kunden som äger bokningen:  "),
+            RoomId = UtilityLibrary.GetInt("Ange ID-nummer för det rum där bokningen gäller:  ")
 
         };
         int reservationId = ui.AddReservationToLogic(reservation);
@@ -330,12 +330,12 @@ public class Menu
     {
         Reservation reservation = new()
         {
-            Id = Library.GetInt("Ange id nummer för den bokning som ska uppdateras: "),
-            CheckIn = Library.GetDateTime("Ange nya incheknings datumet: "),
-            CheckOut = Library.GetDateTime("Ange nya utchcknings datumet: "),
-            TotalCost = Library.GetInt("Ange total kostnad för bokningen: "),
-            CustomerId = Library.GetInt("Ange ID-nummer för kunden som äger bokningen:  "),
-            RoomId = Library.GetInt("Ange ID-nummer för det rum där bokningen gäller:  ")
+            Id = UtilityLibrary.GetInt("Ange id nummer för den bokning som ska uppdateras: "),
+            CheckIn = UtilityLibrary.GetDateTime("Ange nya incheknings datumet: "),
+            CheckOut = UtilityLibrary.GetDateTime("Ange nya utchcknings datumet: "),
+            TotalCost = UtilityLibrary.GetInt("Ange total kostnad för bokningen: "),
+            CustomerId = UtilityLibrary.GetInt("Ange ID-nummer för kunden som äger bokningen:  "),
+            RoomId = UtilityLibrary.GetInt("Ange ID-nummer för det rum där bokningen gäller:  ")
 
         };
         int reservationId = ui.UpdateLogicData(reservation);
@@ -350,11 +350,11 @@ public class Menu
     }
     public bool FindReservation()
     {
-        int userChoice = Library.GetInt("Vill du söka efter en bokning genom kundens id-nummer eller boknings id-nummer? 1.kund id-nummer/ 2.boknings id-nummer:");
+        int userChoice = UtilityLibrary.GetInt("Vill du söka efter en bokning genom kundens id-nummer eller boknings id-nummer? 1.kund id-nummer/ 2.boknings id-nummer:");
         bool foundReservation = false;
         if (userChoice == 1)
         {
-            int customerId = Library.GetInt("Ange kundens id-nummer: ");
+            int customerId = UtilityLibrary.GetInt("Ange kundens id-nummer: ");
             foreach (HotelItem x in ui.SearchItem(customerId))
             {
                 if (x is Reservation)
@@ -367,7 +367,7 @@ public class Menu
         }
         else if (userChoice == 2)
         {
-            string reservationId = Library.GetString("Ange boknings id-nummer: ");
+            string reservationId = UtilityLibrary.GetString("Ange boknings id-nummer: ");
             foreach (HotelItem x in ui.SearchItem(reservationId))
             {
                 if (x is Reservation)
@@ -388,7 +388,7 @@ public class Menu
     {
         Reservation reservation = new()
         {
-            Id = Library.GetInt("Ange id-nummer för bokningen som ska raderas: ")
+            Id = UtilityLibrary.GetInt("Ange id-nummer för bokningen som ska raderas: ")
         };
         int reservationId = ui.DeleteDataFromLogic(reservation);
         if (reservationId != 0)
@@ -418,7 +418,7 @@ public class Menu
     }
     public void ShowAvailableRoom()
     {
-        DateTime checkIn = Library.GetDateTime("Ange önskade inchecknings datumet: ");
+        DateTime checkIn = UtilityLibrary.GetDateTime("Ange önskade inchecknings datumet: ");
         foreach (HotelItem x in ui.GetAvailableRoomFromLogic(checkIn))
         {
             if (x is Room)
@@ -431,10 +431,10 @@ public class Menu
     {
         Room room = new()
         {
-            Id = Library.GetInt("Ange id-nummer för rummet som ska uppdateras: "),
-            RoomNumber = Library.GetInt("Ange nya nummer för rummet: "),
-            Type = Library.GetString("Ange nya typen för rummet: "),
-            Price = Library.GetInt("Ange kostnaden för rummet: "),
+            Id = UtilityLibrary.GetInt("Ange id-nummer för rummet som ska uppdateras: "),
+            RoomNumber = UtilityLibrary.GetInt("Ange nya nummer för rummet: "),
+            Type = UtilityLibrary.GetString("Ange nya typen för rummet: "),
+            Price = UtilityLibrary.GetInt("Ange kostnaden för rummet: "),
         };
         int roomId = ui.UpdateLogicData(room);
         if (roomId != 0)
@@ -450,9 +450,9 @@ public class Menu
     {
         Room room = new()
         {
-            RoomNumber = Library.GetInt("Ange nummer för nya rummet: "),
-            Type = Library.GetString("Ange typen på rummet: "),
-            Price = Library.GetInt("Ange kostnaden för rummet: "),
+            RoomNumber = UtilityLibrary.GetInt("Ange nummer för nya rummet: "),
+            Type = UtilityLibrary.GetString("Ange typen på rummet: "),
+            Price = UtilityLibrary.GetInt("Ange kostnaden för rummet: "),
         };
         int roomId = ui.AddDataToLogic(room);
         if (roomId != 0)
@@ -466,11 +466,11 @@ public class Menu
     }
     public bool FindRoom()
     {
-        int userChoice = Library.GetInt("Vill du söka efter ett rum genom rumnummer eller rumstyp? Vänligen välj: 1. Rumnummer / 2. Rumstyp: ");
+        int userChoice = UtilityLibrary.GetInt("Vill du söka efter ett rum genom rumnummer eller rumstyp? Vänligen välj: 1. Rumnummer / 2. Rumstyp: ");
         bool foundRoom = false;
         if (userChoice == 1)
         {
-            int roomNumber = Library.GetInt("Ange rumnummer på det rum du söker: ");
+            int roomNumber = UtilityLibrary.GetInt("Ange rumnummer på det rum du söker: ");
             foreach (HotelItem x in ui.SearchItem(roomNumber))
             {
                 if (x is Room)
@@ -483,7 +483,7 @@ public class Menu
         }
         else if (userChoice == 2)
         {
-            string roomType = Library.GetString("Ange den typen av rum du söker: ");
+            string roomType = UtilityLibrary.GetString("Ange den typen av rum du söker: ");
             foreach (HotelItem x in ui.SearchItem(roomType))
             {
                 if (x is Room)
@@ -504,7 +504,7 @@ public class Menu
     {
         Reservation Room = new()
         {
-            Id = Library.GetInt("Ange id-nummer för rummet som ska raderas: ")
+            Id = UtilityLibrary.GetInt("Ange id-nummer för rummet som ska raderas: ")
         };
         int roomId = ui.DeleteDataFromLogic(Room);
         if (roomId != 0)
